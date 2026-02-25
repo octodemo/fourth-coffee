@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { db, Product } from 'astro:db';
+
+const products = await db
+  .select({
+    name: Product.name,
+    slug: Product.slug,
+    price: Product.price,
+    roast: Product.roast,
+  })
+  .from(Product)
+  .orderBy(Product.name);
+---
+
+<BaseLayout title="Our Coffees">
+  <h1>Our Coffees</h1>
+  <div class="product-grid">
+    {products.map(p => (
+      <article class="product-card">
+        <span class="roast-badge" data-roast={p.roast.toLowerCase()}>{p.roast}</span>
+        <h2>{p.name}</h2>
+        <p class="price">${p.price.toFixed(2)}</p>
+        <a class="btn" href={`/products/${p.slug}`}>View Details</a>
+      </article>
+    ))}
+  </div>
+</BaseLayout>

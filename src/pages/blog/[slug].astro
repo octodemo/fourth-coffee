@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  console.log("Generating static paths for blog posts...");
+
+  const posts = await getCollection('blog');
+
+
+  return posts.map((post) => ({
+    params: { slug: post.id }, // filename
+    props: { post }, // blog post to display
+  }));
+
+
+}
+
+const { post } = Astro.props;
+console.log("Rendering blog post:", post.data.title);
+
+const { Content } = await render(post);
+---
+
+<BaseLayout title={post.data.title}>
+  <article class="blog-post">
+    <h1>{post.data.title}</h1>
+    <p class="meta">By {post.data.author} • {post.data.pubDate.toLocaleDateString()}</p>
+    <Content />
+    <a href="/blog">← Back to blog</a>
+  </article>
+</BaseLayout>

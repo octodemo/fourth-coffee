@@ -1,0 +1,89 @@
+---
+import '../styles/global.css';
+// Props are passed from parent components
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title} | Fourth Coffee</title>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a href="/" class="logo">☕ Fourth Coffee</a>
+        <div class="nav-links">
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <a href="/blog">Blog</a>
+          <a href="/products">Products</a>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <slot />  <!-- Child content renders here -->
+    </main>
+
+    <footer>
+      <p>© 2026 Fourth Coffee - Roasted with love in Seattle</p>
+    </footer>
+  </body>
+</html>
+
+<style>
+  /* These styles are SCOPED to this component */
+  header {
+    background: #2c1810;
+    padding: 1rem 2rem;
+  }
+
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .logo {
+    color: #f5f0e8;
+    font-size: 1.5rem;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .nav-links a {
+    color: #f5f0e8;
+    text-decoration: none;
+  }
+
+  .nav-links a:hover {
+    text-decoration: underline;
+  }
+
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    min-height: 60vh;
+  }
+
+  footer {
+    background: #2c1810;
+    color: #f5f0e8;
+    text-align: center;
+    padding: 2rem;
+    margin-top: 2rem;
+  }
+</style>

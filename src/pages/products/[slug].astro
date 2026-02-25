@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { db, Product } from 'astro:db';
+import ReviewList from '../../components/ReviewList.astro';
+import ReviewForm from '../../components/ReviewForm.svelte';
+
+export async function getStaticPaths() {
+  const products = await db
+    .select({
+      slug: Product.slug,
+      name: Product.name,
+      roast: Product.roast,
+      origin: Product.origin,
+      price: Product.price,
+      description: Product.description,
+      notes: Product.notes,
+    })
+    .from(Product);
+  return products.map((product) => ({
+    params: { slug: product.slug },
+    props: { product },
+  }));
+}
+
+const { product } = Astro.props;
+---
+
+<BaseLayout title={product.name}>
+  <div class="product-detail">
+    <a href="/products">← Back to coffees</a>
+    <h1>{product.name}</h1>
+    <p>{product.roast} Roast • {product.origin}</p>
+    <p class="price">${product.price.toFixed(2)} / 12oz bag</p>
+    <p>{product.description}</p>
+    <div class="notes"><strong>Tasting Notes:</strong> {product.notes}</div>
+    <ReviewForm slug={product.slug} client:load />
+    <ReviewList slug={product.slug} server:defer />
+  </div>
+</BaseLayout>
