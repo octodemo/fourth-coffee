@@ -20,7 +20,7 @@ const reviews = await db
 {reviews.length > 0 && (
   <div class="reviews-list">
     {reviews.map(review => (
-      <div class="review">
+      <div class="review" data-rating={review.rating}>
         <p class="stars">{'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}</p>
         <p class="review-comment">"{review.comment}"</p>
         <p class="review-author">— {review.author}</p>
