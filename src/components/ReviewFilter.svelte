@@ -1,4 +1,6 @@
 <script>
+  import { filterReviewsByScore, countByRating } from '../lib/reviews';
+
   let activeFilter = $state(0); // 0 = all
 
   function applyFilter(rating) {
@@ -6,7 +8,8 @@
     const reviews = document.querySelectorAll('.reviews-list .review');
     reviews.forEach(el => {
       const r = Number(el.dataset.rating);
-      el.style.display = (rating === 0 || r === rating) ? '' : 'none';
+      const visible = filterReviewsByScore([{ rating: r, comment: '', author: '' }], rating).length > 0;
+      el.style.display = visible ? '' : 'none';
     });
   }
 </script>
