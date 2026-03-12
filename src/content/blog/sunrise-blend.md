@@ -2,6 +2,7 @@
 title: "Introducing: Sunrise Blend"
 pubDate: 2024-01-20
 author: "Fourth Coffee Team"
+description: "Meet Sunrise Blend — our newest seasonal coffee crafted from Ethiopian and Guatemalan beans, with bright citrus notes and a smooth, caramel finish."
 ---
 
 We're excited to announce **Sunrise Blend**, our newest seasonal offering crafted for those early morning moments when you need something bright, warm, and uplifting. Our roasters spent three months dialing in this blend, combining beans from Ethiopia and Guatemala to create something truly special.

@@ -2,6 +2,7 @@
 title: "The Perfect Pour Over"
 pubDate: 2024-01-15
 author: "Emma, Head Roaster"
+description: "Learn the pour over technique that unlocks complex flavors from single-origin coffee — a ritual that rewards patience and attention to detail."
 ---
 
 A great pour over starts with freshly ground beans and a little patience. At Fourth Coffee, we believe the pour over is the purest way to experience a single-origin coffee. No machine between you and the flavor. It's a ritual that rewards attention to detail, and once you nail the technique, you'll never look at drip coffee the same way.
