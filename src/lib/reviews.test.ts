@@ -71,6 +71,11 @@ describe('filterReviewsByScore', () => {
     expect(filterReviewsByScore([], 5)).toEqual([]);
   });
 
+  it('returns an empty array when score is outside the valid 1–5 range', () => {
+    expect(filterReviewsByScore(reviews, 6)).toHaveLength(0);
+    expect(filterReviewsByScore(reviews, -1)).toHaveLength(0);
+  });
+
   it('preserves the original order of reviews', () => {
     const result = filterReviewsByScore(reviews, 5);
     expect(result.map(r => r.author)).toEqual(['Alice', 'Carol', 'Heidi']);
@@ -119,5 +124,10 @@ describe('countByRating', () => {
     const counts = countByRating(allFours);
     expect(counts.get(4)).toBe(3);
     expect(counts.get(5)).toBe(0);
+  });
+
+  it('always returns a map with exactly the keys 1 through 5', () => {
+    const counts = countByRating(reviews);
+    expect([...counts.keys()].sort((a, b) => a - b)).toEqual([1, 2, 3, 4, 5]);
   });
 });

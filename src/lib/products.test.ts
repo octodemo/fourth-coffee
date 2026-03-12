@@ -56,6 +56,14 @@ describe('buildRatingMap', () => {
   it('returns an empty map when given an empty array', () => {
     expect(buildRatingMap([])).toEqual(new Map());
   });
+
+  it('stores 0 when avgRating is exactly 0 (a product with no ratings yet)', () => {
+    const rows: RatingRow[] = [
+      { productSlug: 'sunrise-blend', avgRating: 0 },
+    ];
+    const map = buildRatingMap(rows);
+    expect(map.get('sunrise-blend')).toBe(0);
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -77,6 +85,21 @@ describe('getUniqueRoastTypes', () => {
 
   it('returns an empty array when given an empty product list', () => {
     expect(getUniqueRoastTypes([])).toEqual([]);
+  });
+
+  it('returns a single entry when all products share the same roast type', () => {
+    const mediumOnly: ProductRow[] = [
+      { name: 'Colombian Supremo', slug: 'colombian-supremo', price: 16.99, roast: 'Medium' },
+      { name: 'Sunrise Blend',     slug: 'sunrise-blend',     price: 15.99, roast: 'Medium' },
+    ];
+    expect(getUniqueRoastTypes(mediumOnly)).toEqual(['Medium']);
+  });
+
+  it('handles a single product correctly', () => {
+    const single: ProductRow[] = [
+      { name: 'Kenya AA', slug: 'kenya-aa', price: 19.99, roast: 'Light' },
+    ];
+    expect(getUniqueRoastTypes(single)).toEqual(['Light']);
   });
 });
 
@@ -131,6 +154,11 @@ describe('filterAndAttachRatings', () => {
 
   it('returns an empty array when no products match the filter', () => {
     const result = filterAndAttachRatings(products, ratingMap, 'espresso');
+    expect(result).toHaveLength(0);
+  });
+
+  it('returns an empty array when the product list is empty', () => {
+    const result = filterAndAttachRatings([], ratingMap, 'all');
     expect(result).toHaveLength(0);
   });
 });

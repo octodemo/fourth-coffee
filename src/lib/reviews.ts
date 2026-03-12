@@ -8,12 +8,14 @@ export interface ReviewItem {
  * Filter reviews by star score.
  * @param reviews  The full list of reviews.
  * @param score    The star rating to keep (1–5), or `0` to keep all reviews.
+ *                 Values outside the 0–5 range return an empty array.
  */
 export function filterReviewsByScore(
   reviews: ReviewItem[],
   score: number,
 ): ReviewItem[] {
   if (score === 0) return reviews;
+  if (score < 1 || score > 5) return [];
   return reviews.filter(r => r.rating === score);
 }
 
