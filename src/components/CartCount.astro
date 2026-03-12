@@ -1,0 +1,8 @@
+---
+const cart = await Astro.session?.get('cart') || [];
+const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+---
+
+<a href="/products" class="cart-badge">
+  🛒 {totalItems} {totalItems === 1 ? 'item' : 'items'}
+</a>
