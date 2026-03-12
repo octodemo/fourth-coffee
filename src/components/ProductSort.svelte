@@ -41,6 +41,9 @@
 </div>
 
 <style>
+  .filter-sort-bar {
+    margin-bottom: 1.5rem;
+  }
   .filter-control button,
   .sort-control button {
     color: #8b4513;
