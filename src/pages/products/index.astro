@@ -1,6 +1,19 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { db, Product } from 'astro:db';
+import { db, Product, Review, eq, avg } from 'astro:db';
+
+const sort = Astro.url.searchParams.get('sort') === 'rating' ? 'rating' : 'name';
+const roastFilter = Astro.url.searchParams.get('roast') ?? 'all';
+
+function buildUrl(params: Record<string, string>) {
+  const sp = new URLSearchParams();
+  const sort = params.sort ?? Astro.url.searchParams.get('sort');
+  const roast = params.roast ?? Astro.url.searchParams.get('roast');
+  if (sort && sort !== 'name') sp.set('sort', sort);
+  if (roast && roast !== 'all') sp.set('roast', roast);
+  const qs = sp.toString();
+  return `/products${qs ? `?${qs}` : ''}`;
+}
 
 const products = await db
   .select({
@@ -11,15 +24,58 @@ const products = await db
   })
   .from(Product)
   .orderBy(Product.name);
+
+const roastTypes = [...new Set(products.map(p => p.roast))].sort();
+
+const avgRatings = await db
+  .select({
+    productSlug: Review.productSlug,
+    avgRating: avg(Review.rating),
+  })
+  .from(Review)
+  .groupBy(Review.productSlug);
+
+const ratingMap = new Map(avgRatings.map(r => [r.productSlug, Number(r.avgRating) || 0]));
+
+const sortedProducts = products
+  .filter(p => roastFilter === 'all' || p.roast.toLowerCase() === roastFilter.toLowerCase())
+  .map(p => ({
+    ...p,
+    avgRating: ratingMap.get(p.slug) ?? 0,
+  }));
+
+if (sort === 'rating') {
+  sortedProducts.sort((a, b) => b.avgRating - a.avgRating);
+}
 ---
 
 <BaseLayout title="Our Coffees">
-  <h1>Our Coffees</h1>
+  <div class="products-header">
+    <h1>Our Coffees</h1>
+    <div class="filter-sort-bar">
+      <div class="filter-control">
+        <span>Roast:</span>
+        <a href={buildUrl({ roast: 'all' })} class:list={[{ active: roastFilter === 'all' }]}>All</a>
+        {roastTypes.map(roast => (
+          <a href={buildUrl({ roast: roast.toLowerCase() })} class:list={[{ active: roastFilter.toLowerCase() === roast.toLowerCase() }]}>{roast}</a>
+        ))}
+      </div>
+      <div class="sort-control">
+        <span>Sort by:</span>
+        <a href={buildUrl({ sort: 'name' })} class:list={[{ active: sort === 'name' }]}>Name</a>
+        <a href={buildUrl({ sort: 'rating' })} class:list={[{ active: sort === 'rating' }]}>Rating</a>
+      </div>
+    </div>
+  </div>
   <div class="product-grid">
-    {products.map(p => (
+    {sortedProducts.map(p => (
       <article class="product-card">
         <span class="roast-badge" data-roast={p.roast.toLowerCase()}>{p.roast}</span>
         <h2>{p.name}</h2>
+        <div class="card-rating">
+          <span class="stars">{'★'.repeat(Math.round(p.avgRating))}{'☆'.repeat(5 - Math.round(p.avgRating))}</span>
+          <span class="rating-value">{p.avgRating > 0 ? p.avgRating.toFixed(1) : 'No reviews'}</span>
+        </div>
         <p class="price">${p.price.toFixed(2)}</p>
         <a class="btn" href={`/products/${p.slug}`}>View Details</a>
       </article>

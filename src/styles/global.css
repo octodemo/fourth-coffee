@@ -41,6 +41,17 @@ body { font-family: system-ui, -apple-system, sans-serif; background: #faf8f5; c
 .roast-badge[data-roast="medium"] { background: #8b4513; color: #f5f0e8; }
 .roast-badge[data-roast="light"] { background: #d4a574; color: #2c1810; }
 
+/* Products header, filter & sort */
+.products-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
+.filter-sort-bar { display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap; }
+.filter-control, .sort-control { display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; }
+.filter-control a, .sort-control a { color: #8b4513; text-decoration: none; padding: 0.3rem 0.7rem; border-radius: 4px; border: 1px solid transparent; }
+.filter-control a.active, .sort-control a.active { background: #2c1810; color: #f5f0e8; }
+.filter-control a:hover:not(.active), .sort-control a:hover:not(.active) { border-color: #e0d6c8; }
+.card-rating { display: flex; align-items: center; gap: 0.4rem; margin: 0.25rem 0 0.5rem; }
+.card-rating .stars { color: #d4a017; font-size: 1.1rem; letter-spacing: 0.05em; }
+.card-rating .rating-value { font-size: 0.85rem; color: #888; }
+
 /* Product detail */
 .product-detail h1 { color: #2c1810; font-size: 2.5rem; }
 .product-detail .price { font-size: 1.5rem; font-weight: bold; color: #2c1810; }
@@ -62,6 +73,12 @@ body { font-family: system-ui, -apple-system, sans-serif; background: #faf8f5; c
 .your-review { padding: 1rem; background: #f0ebe4; border-left: 4px solid #8B4513; border-radius: 8px; margin-bottom: 1rem; position: relative; }
 .your-review-badge { display: inline-block; background: #8B4513; color: #f5f0e8; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.2rem 0.6rem; border-radius: 4px; margin-bottom: 0.5rem; }
 .review { margin-top: 1rem; padding: 1rem; background: #faf8f5; border-radius: 8px; max-width: 400px; }
+.review-filter { margin-top: 1.5rem; max-width: 400px; }
+.review-filter .filter-label { font-weight: 600; color: #2c1810; font-size: 0.95rem; }
+.review-filter .filter-buttons { display: flex; gap: 0.4rem; margin-top: 0.4rem; flex-wrap: wrap; }
+.review-filter button { background: #fff; border: 1px solid #e0d6c8; padding: 0.3rem 0.7rem; border-radius: 4px; cursor: pointer; font-size: 0.9rem; color: #2c1810; transition: all 0.15s; }
+.review-filter button:hover { border-color: #8b4513; }
+.review-filter button.active { background: #2c1810; color: #f5f0e8; border-color: #2c1810; }
 .review-comment { font-style: italic; margin: 0 0 0.25rem 0; }
 .review-author { color: #888; font-size: 0.9rem; margin: 0; }
 
