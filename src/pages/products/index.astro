@@ -1,19 +1,21 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { db, Product, Review, eq, avg } from 'astro:db';
+import { db, Product, Review, avg } from 'astro:db';
+import {
+  buildRatingMap,
+  getUniqueRoastTypes,
+  filterAndAttachRatings,
+  sortProducts,
+  buildUrl,
+} from '../../lib/products';
 
 const sort = Astro.url.searchParams.get('sort') === 'rating' ? 'rating' : 'name';
 const roastFilter = Astro.url.searchParams.get('roast') ?? 'all';
 
-function buildUrl(params: Record<string, string>) {
-  const sp = new URLSearchParams();
-  const sort = params.sort ?? Astro.url.searchParams.get('sort');
-  const roast = params.roast ?? Astro.url.searchParams.get('roast');
-  if (sort && sort !== 'name') sp.set('sort', sort);
-  if (roast && roast !== 'all') sp.set('roast', roast);
-  const qs = sp.toString();
-  return `/products${qs ? `?${qs}` : ''}`;
-}
+const currentParams = {
+  sort: Astro.url.searchParams.get('sort'),
+  roast: Astro.url.searchParams.get('roast'),
+};
 
 const products = await db
   .select({
@@ -25,7 +27,7 @@ const products = await db
   .from(Product)
   .orderBy(Product.name);
 
-const roastTypes = [...new Set(products.map(p => p.roast))].sort();
+const roastTypes = getUniqueRoastTypes(products);
 
 const avgRatings = await db
   .select({
@@ -35,18 +37,10 @@ const avgRatings = await db
   .from(Review)
   .groupBy(Review.productSlug);
 
-const ratingMap = new Map(avgRatings.map(r => [r.productSlug, Number(r.avgRating) || 0]));
+const ratingMap = buildRatingMap(avgRatings);
 
-const sortedProducts = products
-  .filter(p => roastFilter === 'all' || p.roast.toLowerCase() === roastFilter.toLowerCase())
-  .map(p => ({
-    ...p,
-    avgRating: ratingMap.get(p.slug) ?? 0,
-  }));
-
-if (sort === 'rating') {
-  sortedProducts.sort((a, b) => b.avgRating - a.avgRating);
-}
+const sortedProducts = filterAndAttachRatings(products, ratingMap, roastFilter);
+sortProducts(sortedProducts, sort);
 ---
 
 <BaseLayout title="Our Coffees">
@@ -55,15 +49,15 @@ if (sort === 'rating') {
     <div class="filter-sort-bar">
       <div class="filter-control">
         <span>Roast:</span>
-        <a href={buildUrl({ roast: 'all' })} class:list={[{ active: roastFilter === 'all' }]}>All</a>
+        <a href={buildUrl(currentParams, { roast: 'all' })} class:list={[{ active: roastFilter === 'all' }]}>All</a>
         {roastTypes.map(roast => (
-          <a href={buildUrl({ roast: roast.toLowerCase() })} class:list={[{ active: roastFilter.toLowerCase() === roast.toLowerCase() }]}>{roast}</a>
+          <a href={buildUrl(currentParams, { roast: roast.toLowerCase() })} class:list={[{ active: roastFilter.toLowerCase() === roast.toLowerCase() }]}>{roast}</a>
         ))}
       </div>
       <div class="sort-control">
         <span>Sort by:</span>
-        <a href={buildUrl({ sort: 'name' })} class:list={[{ active: sort === 'name' }]}>Name</a>
-        <a href={buildUrl({ sort: 'rating' })} class:list={[{ active: sort === 'rating' }]}>Rating</a>
+        <a href={buildUrl(currentParams, { sort: 'name' })} class:list={[{ active: sort === 'name' }]}>Name</a>
+        <a href={buildUrl(currentParams, { sort: 'rating' })} class:list={[{ active: sort === 'rating' }]}>Rating</a>
       </div>
     </div>
   </div>
