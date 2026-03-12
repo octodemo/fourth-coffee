@@ -1,21 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { db, Product, Review, avg } from 'astro:db';
-import {
-  buildRatingMap,
-  getUniqueRoastTypes,
-  filterAndAttachRatings,
-  sortProducts,
-  buildUrl,
-} from '../../lib/products';
-
-const sort = Astro.url.searchParams.get('sort') === 'rating' ? 'rating' : 'name';
-const roastFilter = Astro.url.searchParams.get('roast') ?? 'all';
-
-const currentParams = {
-  sort: Astro.url.searchParams.get('sort'),
-  roast: Astro.url.searchParams.get('roast'),
-};
 
 const products = await db
   .select({
@@ -27,8 +12,6 @@ const products = await db
   .from(Product)
   .orderBy(Product.name);
 
-const roastTypes = getUniqueRoastTypes(products);
-
 const avgRatings = await db
   .select({
     productSlug: Review.productSlug,
@@ -37,32 +20,20 @@ const avgRatings = await db
   .from(Review)
   .groupBy(Review.productSlug);
 
-const ratingMap = buildRatingMap(avgRatings);
+const ratingMap = new Map(avgRatings.map(r => [r.productSlug, Number(r.avgRating) || 0]));
 
-const sortedProducts = filterAndAttachRatings(products, ratingMap, roastFilter);
-sortProducts(sortedProducts, sort);
+const productsWithRatings = products.map(p => ({
+  ...p,
+  avgRating: ratingMap.get(p.slug) ?? 0,
+}));
 ---
 
 <BaseLayout title="Our Coffees">
   <div class="products-header">
     <h1>Our Coffees</h1>
-    <div class="filter-sort-bar">
-      <div class="filter-control">
-        <span>Roast:</span>
-        <a href={buildUrl(currentParams, { roast: 'all' })} class:list={[{ active: roastFilter === 'all' }]}>All</a>
-        {roastTypes.map(roast => (
-          <a href={buildUrl(currentParams, { roast: roast.toLowerCase() })} class:list={[{ active: roastFilter.toLowerCase() === roast.toLowerCase() }]}>{roast}</a>
-        ))}
-      </div>
-      <div class="sort-control">
-        <span>Sort by:</span>
-        <a href={buildUrl(currentParams, { sort: 'name' })} class:list={[{ active: sort === 'name' }]}>Name</a>
-        <a href={buildUrl(currentParams, { sort: 'rating' })} class:list={[{ active: sort === 'rating' }]}>Rating</a>
-      </div>
-    </div>
   </div>
   <div class="product-grid">
-    {sortedProducts.map(p => (
+    {productsWithRatings.map(p => (
       <article class="product-card">
         <span class="roast-badge" data-roast={p.roast.toLowerCase()}>{p.roast}</span>
         <h2>{p.name}</h2>
