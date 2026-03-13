@@ -30,7 +30,9 @@ body { font-family: system-ui, -apple-system, sans-serif; background: #faf8f5; c
 .blog-post a { color: #8b4513; }
 
 /* Products grid */
-.product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; }
+.product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+@media (max-width: 900px) { .product-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .product-grid { grid-template-columns: 1fr; } }
 .product-card { background: #fff; border: 1px solid #e0d6c8; border-radius: 8px; padding: 1.5rem; position: relative; text-decoration: none; color: inherit; }
 .product-card h2 { color: #2c1810; }
 .product-card .price { font-size: 1.5rem; font-weight: bold; color: #2c1810; }
@@ -48,6 +50,16 @@ body { font-family: system-ui, -apple-system, sans-serif; background: #faf8f5; c
 .filter-control a, .sort-control a { color: #8b4513; text-decoration: none; padding: 0.3rem 0.7rem; border-radius: 4px; border: 1px solid transparent; }
 .filter-control a.active, .sort-control a.active { background: #2c1810; color: #f5f0e8; }
 .filter-control a:hover:not(.active), .sort-control a:hover:not(.active) { border-color: #e0d6c8; }
+/* Pagination */
+.pagination { display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 2.5rem; padding: 1rem 0; }
+.pagination-btn { color: #8b4513; text-decoration: none; padding: 0.5rem 1rem; border: 1px solid #e0d6c8; border-radius: 4px; font-size: 0.95rem; transition: all 0.2s; }
+.pagination-btn:hover { background: #2c1810; color: #f5f0e8; border-color: #2c1810; }
+.pagination-btn.disabled { color: #ccc; border-color: #e0d6c8; pointer-events: none; }
+.pagination-pages { display: flex; gap: 0.35rem; }
+.pagination-num { display: inline-flex; align-items: center; justify-content: center; width: 2.2rem; height: 2.2rem; border-radius: 4px; text-decoration: none; font-size: 0.95rem; color: #8b4513; border: 1px solid #e0d6c8; transition: all 0.2s; }
+.pagination-num:hover { background: #f0ebe4; }
+.pagination-num.active { background: #2c1810; color: #f5f0e8; border-color: #2c1810; font-weight: 600; }
+
 .card-rating { display: flex; align-items: center; gap: 0.4rem; margin: 0.25rem 0 0.5rem; }
 .card-rating .stars { color: #d4a017; font-size: 1.1rem; letter-spacing: 0.05em; }
 .card-rating .rating-value { font-size: 0.85rem; color: #888; }
