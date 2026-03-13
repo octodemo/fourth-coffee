@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProductSort from '../../components/ProductSort.svelte';
 import { db, Product, Review, avg } from 'astro:db';
 
 const products = await db
@@ -32,18 +33,5 @@ const productsWithRatings = products.map(p => ({
   <div class="products-header">
     <h1>Our Coffees</h1>
   </div>
-  <div class="product-grid">
-    {productsWithRatings.map(p => (
-      <article class="product-card">
-        <span class="roast-badge" data-roast={p.roast.toLowerCase()}>{p.roast}</span>
-        <h2>{p.name}</h2>
-        <div class="card-rating">
-          <span class="stars">{'★'.repeat(Math.round(p.avgRating))}{'☆'.repeat(5 - Math.round(p.avgRating))}</span>
-          <span class="rating-value">{p.avgRating > 0 ? p.avgRating.toFixed(1) : 'No reviews'}</span>
-        </div>
-        <p class="price">${p.price.toFixed(2)}</p>
-        <a class="btn" href={`/products/${p.slug}`}>View Details</a>
-      </article>
-    ))}
-  </div>
+  <ProductSort products={productsWithRatings} client:load />
 </BaseLayout>
