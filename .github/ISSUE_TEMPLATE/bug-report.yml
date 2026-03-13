@@ -1,35 +1,48 @@
-name: Bug report
-description: Create a report to help us improve
+name: Bug Report
+description: Create a bug report to help us improve.
 title: "[BUG] - "
-labels: bug
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to report a bug! Please fill in the details below to help us understand the issue and find a solution.
+        Thanks for taking the time to report a bug! Please fill out the following information to help us understand and resolve the issue.
 
-  - type: input
-    id: expected-behavior
+  - type: textarea
+    id: description
     attributes:
-      label: Expected behavior
-      description: Describe what you expected to happen.
+      label: Description
+      description: A clear and concise description of what the bug is.
+      placeholder: "Describe the bug here..."
+      required: true
 
-  - type: input
-    id: actual-behavior
+  - type: textarea
+    id: steps_to_reproduce
     attributes:
-      label: Actual behavior
-      description: Describe what actually happened.
+      label: Steps to Reproduce
+      description: A step-by-step list of how to reproduce the bug.
+      placeholder: "1. Go to '...'\n2. Click on '...'\n3. Scroll down to '...'\n4. See error"
+      required: true
 
-  - type: input
-    id: steps-to-reproduce
+  - type: textarea
+    id: expected_behavior
     attributes:
-      label: Steps to reproduce
-      description: List the steps to reproduce the issue, including any relevant code snippets or configurations.
+      label: Expected Behavior
+      description: A clear and concise description of what you expected to happen.
+      placeholder: "Describe what you expected to happen..."
+      required: true
+
+  - type: textarea
+    id: actual_behavior
+    attributes:
+      label: Actual Behavior
+      description: A clear and concise description of what actually happened.
+      placeholder: "Describe what actually happened..."
+      required: true
 
   - type: upload
     id: screenshots
     attributes:
       label: Screenshots
-      description: Please upload a screenshot of the error
+      description: Upload a screenshot of the behavior
     validations:
       required: true
