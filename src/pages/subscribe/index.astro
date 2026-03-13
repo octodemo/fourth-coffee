@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SubscriptionForm from '../../components/SubscriptionForm.svelte';
+import { db, Product } from 'astro:db';
+
+const products = await db
+  .select({
+    name: Product.name,
+    slug: Product.slug,
+    price: Product.price,
+    roast: Product.roast,
+  })
+  .from(Product)
+  .orderBy(Product.name);
+---
+
+<BaseLayout title="Subscribe">
+  <div class="subscribe-page">
+    <h1>Coffee Subscription</h1>
+    <p class="subscribe-intro">
+      Never run out of your favorite coffee. Choose your roast, pick your coffee,
+      and we'll deliver fresh beans right to your door on a schedule that works for you.
+    </p>
+
+    <div class="subscribe-benefits">
+      <div class="benefit">
+        <span class="benefit-icon">☕</span>
+        <h3>Choose Your Coffee</h3>
+        <p>Pick from our selection of 30+ premium coffees from around the world.</p>
+      </div>
+      <div class="benefit">
+        <span class="benefit-icon">📦</span>
+        <h3>Flexible Delivery</h3>
+        <p>Monthly or bi-weekly delivery — adjust anytime to match your brewing habits.</p>
+      </div>
+      <div class="benefit">
+        <span class="benefit-icon">✨</span>
+        <h3>Always Fresh</h3>
+        <p>Roasted to order and shipped within 24 hours for peak freshness.</p>
+      </div>
+    </div>
+
+    <SubscriptionForm products={products} client:load />
+  </div>
+</BaseLayout>
