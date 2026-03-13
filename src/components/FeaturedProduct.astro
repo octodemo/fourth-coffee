@@ -1,0 +1,38 @@
+---
+interface Props {
+  name: string;
+  slug: string;
+  description: string;
+  price: number;
+  roast: string;
+  origin: string;
+  notes: string;
+  avgRating: number;
+  reviewCount: number;
+}
+
+const { name, slug, description, price, roast, origin, notes, avgRating, reviewCount } = Astro.props;
+const filledStars = Math.round(avgRating);
+const emptyStars = 5 - filledStars;
+---
+
+<section class="featured-product">
+  <h2>☕ Featured Product</h2>
+  <div class="featured-card">
+    <div class="featured-info">
+      <span class="roast-badge" data-roast={roast.toLowerCase()}>{roast}</span>
+      <h3>{name}</h3>
+      <p class="featured-origin">{origin}</p>
+      <p class="featured-description">{description}</p>
+      <div class="featured-notes"><strong>Tasting Notes:</strong> {notes}</div>
+      <div class="featured-rating">
+        <span class="stars">{'★'.repeat(filledStars)}{'☆'.repeat(emptyStars)}</span>
+        <span class="rating-value">
+          {avgRating > 0 ? `${avgRating.toFixed(1)} (${reviewCount} ${reviewCount === 1 ? 'review' : 'reviews'})` : 'No reviews yet'}
+        </span>
+      </div>
+      <p class="featured-price">${price.toFixed(2)}</p>
+      <a class="btn" href={`/products/${slug}`}>View Details</a>
+    </div>
+  </div>
+</section>

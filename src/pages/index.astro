@@ -1,9 +1,56 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import FeaturedProduct from "../components/FeaturedProduct.astro";
+import { db, Product, Review, avg, count, desc } from "astro:db";
+
+const avgRatings = await db
+  .select({
+    productSlug: Review.productSlug,
+    avgRating: avg(Review.rating),
+    reviewCount: count(Review.id),
+  })
+  .from(Review)
+  .groupBy(Review.productSlug)
+  .orderBy(desc(avg(Review.rating)));
+
+const topRated = avgRatings[0];
+
+let featured = null;
+if (topRated) {
+  const products = await db
+    .select()
+    .from(Product);
+  const product = products.find(p => p.slug === topRated.productSlug);
+  if (product) {
+    featured = {
+      ...product,
+      avgRating: Number(topRated.avgRating) || 0,
+      reviewCount: Number(topRated.reviewCount) || 0,
+    };
+  }
+}
 ---
 
 <BaseLayout title="Home">
   <h1>Welcome to Fourth Coffee</h1>
   <p>Your one-stop shop for the finest coffee beans and brewing equipment.</p>
   <p>Explore our blog for brewing tips, coffee recipes, and industry news.</p>
+
+  {featured && (
+    <FeaturedProduct
+      name={featured.name}
+      slug={featured.slug}
+      description={featured.description}
+      price={featured.price}
+      roast={featured.roast}
+      origin={featured.origin}
+      notes={featured.notes}
+      avgRating={featured.avgRating}
+      reviewCount={featured.reviewCount}
+    />
+  )}
+
+  <div class="browse-all">
+    <a href="/products" class="btn">Browse All Coffees →</a>
+  </div>
 </BaseLayout>
