@@ -1,0 +1,35 @@
+name: Bug report
+description: Create a report to help us improve
+title: "[BUG] - "
+labels: bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill in the details below to help us understand the issue and find a solution.
+
+  - type: input
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+      description: Describe what you expected to happen.
+
+  - type: input
+    id: actual-behavior
+    attributes:
+      label: Actual behavior
+      description: Describe what actually happened.
+
+  - type: input
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to reproduce
+      description: List the steps to reproduce the issue, including any relevant code snippets or configurations.
+
+  - type: upload
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: Please upload a screenshot of the error
+    validations:
+      required: true
