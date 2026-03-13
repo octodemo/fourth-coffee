@@ -1,4 +1,4 @@
-import { db, Product, Review } from 'astro:db';
+import { db, Product, Review, Subscription } from 'astro:db';
 
 export default async function seed() {
   await db.insert(Product).values([
@@ -43,5 +43,11 @@ export default async function seed() {
     { id: 6, productSlug: 'burundi-kayanza', author: 'Rachel M.', rating: 4, comment: 'Beautiful lemon and black tea flavors. So unique.' },
     { id: 7, productSlug: 'colombian-supremo', author: 'Chris D.', rating: 4, comment: 'Perfectly balanced. Great for everyday drinking.' },
     { id: 8, productSlug: 'colombian-supremo', author: 'Emily W.', rating: 3, comment: 'Smooth and nutty. My go-to office coffee.' },
+  ]);
+
+  await db.insert(Subscription).values([
+    { id: 1, customerName: 'Alice Johnson', customerEmail: 'alice@example.com', productSlug: 'ethiopian-yirgacheffe', roastPreference: 'Light', frequency: 'monthly', bagSize: '12oz', createdAt: '2026-01-15T10:00:00Z' },
+    { id: 2, customerName: 'Bob Smith', customerEmail: 'bob@example.com', productSlug: 'colombian-supremo', roastPreference: 'Medium', frequency: 'bi-weekly', bagSize: '1lb', createdAt: '2026-02-01T14:30:00Z' },
+    { id: 3, customerName: 'Carol Davis', customerEmail: 'carol@example.com', productSlug: 'french-roast', roastPreference: 'Dark', frequency: 'monthly', bagSize: '2lb', createdAt: '2026-02-20T09:15:00Z' },
   ]);
 }
