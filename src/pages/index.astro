@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import FeaturedProduct from "../components/FeaturedProduct.astro";
-import { db, Product, Review, avg, count, desc } from "astro:db";
+import { db, Product, Review, avg, count, desc, eq } from "astro:db";
 
 const avgRatings = await db
   .select({
@@ -17,10 +17,10 @@ const topRated = avgRatings[0];
 
 let featured = null;
 if (topRated) {
-  const products = await db
+  const [product] = await db
     .select()
-    .from(Product);
-  const product = products.find(p => p.slug === topRated.productSlug);
+    .from(Product)
+    .where(eq(Product.slug, topRated.productSlug));
   if (product) {
     featured = {
       ...product,
