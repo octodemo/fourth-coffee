@@ -1,48 +1,24 @@
-name: Bug Report
-description: Create a bug report to help us improve.
+name: Bug report
+description: Create a report to help us improve
 title: "[BUG] - "
+type: bug
 body:
   - type: markdown
-    attributes:
+    attributes: 
       value: |
-        Thanks for taking the time to report a bug! Please fill out the following information to help us understand and resolve the issue.
-
+        Thanks for taking the time to report a bug! Please fill in the details below to help us understand the issue and find a solution.
   - type: textarea
-    id: description
+    id: bug-description
     attributes:
       label: Description
       description: A clear and concise description of what the bug is.
       placeholder: "Describe the bug here..."
+    validations:
       required: true
-
-  - type: textarea
-    id: steps_to_reproduce
-    attributes:
-      label: Steps to Reproduce
-      description: A step-by-step list of how to reproduce the bug.
-      placeholder: "1. Go to '...'\n2. Click on '...'\n3. Scroll down to '...'\n4. See error"
-      required: true
-
-  - type: textarea
-    id: expected_behavior
-    attributes:
-      label: Expected Behavior
-      description: A clear and concise description of what you expected to happen.
-      placeholder: "Describe what you expected to happen..."
-      required: true
-
-  - type: textarea
-    id: actual_behavior
-    attributes:
-      label: Actual Behavior
-      description: A clear and concise description of what actually happened.
-      placeholder: "Describe what actually happened..."
-      required: true
-
   - type: upload
-    id: screenshots
+    id: bug-screenshot
     attributes:
-      label: Screenshots
-      description: Upload a screenshot of the behavior
+      label: Screenshot
+      description: Please upload a screenshot of the behavior
     validations:
       required: true
