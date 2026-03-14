@@ -58,29 +58,33 @@
 
 <div class="product-controls">
   <div class="product-sort">
-    <label for="sort-select">Sort by:</label>
-    <select id="sort-select" value={activeSort} onchange={(e) => applySort(e.target.value)}>
-      <option value="name">Name</option>
-      <option value="rating">Rating</option>
-    </select>
-    <button class="order-toggle" onclick={toggleOrder} title={ascending ? 'Ascending' : 'Descending'}>
+    <span class="control-label">Sort by:</span>
+    <div class="sort-buttons">
+      <button class:active={activeSort === 'name'} aria-pressed={activeSort === 'name'} onclick={() => applySort('name')}>Name</button>
+      <button class:active={activeSort === 'rating'} aria-pressed={activeSort === 'rating'} onclick={() => applySort('rating')}>Highest Rated</button>
+    </div>
+    <button class="order-toggle" class:active={!ascending} onclick={toggleOrder} aria-label={ascending ? 'Sort ascending. Click to sort descending' : 'Sort descending. Click to sort ascending'}>
       {ascending ? '↑' : '↓'}
     </button>
   </div>
 
+  <div class="divider"></div>
+
   <div class="product-filter">
-    <span class="filter-label">Rating:</span>
-    <select value={minStars} onchange={(e) => setMin(Number(e.target.value))}>
-      {#each [0, 1, 2, 3, 4, 5] as s}
-        <option value={s}>{s}★</option>
-      {/each}
-    </select>
-    <span>to</span>
-    <select value={maxStars} onchange={(e) => setMax(Number(e.target.value))}>
-      {#each [0, 1, 2, 3, 4, 5] as s}
-        <option value={s}>{s}★</option>
-      {/each}
-    </select>
+    <span class="control-label">⭐ Rating:</span>
+    <div class="star-range">
+      <select value={minStars} onchange={(e) => setMin(Number(e.target.value))}>
+        {#each [0, 1, 2, 3, 4, 5] as s}
+          <option value={s}>{s}★</option>
+        {/each}
+      </select>
+      <span class="range-sep">to</span>
+      <select value={maxStars} onchange={(e) => setMax(Number(e.target.value))}>
+        {#each [0, 1, 2, 3, 4, 5] as s}
+          <option value={s}>{s}★</option>
+        {/each}
+      </select>
+    </div>
   </div>
 </div>
 
@@ -88,8 +92,12 @@
   .product-controls {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: 0.75rem;
     flex-wrap: wrap;
+    background: #fff8f0;
+    border: 1px solid #e0d6c8;
+    border-radius: 10px;
+    padding: 0.6rem 1rem;
   }
 
   .product-sort,
@@ -99,31 +107,89 @@
     gap: 0.5rem;
   }
 
-  label, .filter-label {
-    font-weight: 600;
-    color: var(--text-secondary, #666);
+  .control-label {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #2c1810;
+    white-space: nowrap;
   }
 
-  select {
-    padding: 0.4rem 0.6rem;
-    border: 1px solid var(--border-color, #ddd);
+  .sort-buttons {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .sort-buttons button,
+  .order-toggle {
+    background: #fff;
+    border: 1px solid #e0d6c8;
+    color: #2c1810;
+    padding: 0.35rem 0.75rem;
     border-radius: 6px;
-    font-size: 0.95rem;
-    background: white;
+    font-size: 0.9rem;
+    font-weight: 500;
     cursor: pointer;
+    transition: all 0.15s;
+    line-height: 1.2;
+  }
+
+  .sort-buttons button:hover,
+  .order-toggle:hover {
+    border-color: #8b4513;
+    color: #8b4513;
+  }
+
+  .sort-buttons button.active {
+    background: #2c1810;
+    color: #f5f0e8;
+    border-color: #2c1810;
   }
 
   .order-toggle {
-    padding: 0.4rem 0.6rem;
-    border: 1px solid var(--border-color, #ddd);
-    border-radius: 6px;
     font-size: 1rem;
-    background: white;
-    cursor: pointer;
-    line-height: 1;
+    padding: 0.35rem 0.6rem;
   }
 
-  .order-toggle:hover {
-    background: var(--bg-hover, #f0f0f0);
+  .order-toggle.active {
+    background: #8b4513;
+    color: #f5f0e8;
+    border-color: #8b4513;
+  }
+
+  .divider {
+    width: 1px;
+    height: 1.6rem;
+    background: #e0d6c8;
+    flex-shrink: 0;
+  }
+
+  .star-range {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .star-range select {
+    padding: 0.35rem 0.5rem;
+    border: 1px solid #e0d6c8;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background: #fff;
+    color: #2c1810;
+    cursor: pointer;
+    font-weight: 500;
+    transition: border-color 0.15s;
+  }
+
+  .star-range select:hover,
+  .star-range select:focus {
+    border-color: #8b4513;
+    outline: none;
+  }
+
+  .range-sep {
+    font-size: 0.85rem;
+    color: #555;
+    font-weight: 500;
   }
 </style>
