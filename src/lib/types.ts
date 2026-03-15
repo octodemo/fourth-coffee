@@ -12,5 +12,6 @@ export interface Product {
 export interface CartItem {
     slug: string;
     name: string;
+    price: number;
     quantity: number;
 }
