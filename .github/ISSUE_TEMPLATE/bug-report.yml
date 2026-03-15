@@ -20,5 +20,3 @@ body:
     attributes:
       label: Screenshot
       description: Please upload a screenshot of the behavior
-    validations:
-      required: true
