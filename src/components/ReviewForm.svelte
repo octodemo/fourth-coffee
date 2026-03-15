@@ -17,7 +17,7 @@
 {#if submitted}
   <div class="review your-review">
     <span class="your-review-badge">Thanks for your review!</span>
-    <p class="stars">{'★'.repeat(rating)}{'☆'.repeat(5 - rating)}</p>
+    <p class="stars" role="img" aria-label={`${rating} out of 5 stars`}>{'★'.repeat(rating)}{'☆'.repeat(5 - rating)}</p>
     <p class="review-comment">"{comment}"</p>
     <p class="review-author">— {author}</p>
   </div>

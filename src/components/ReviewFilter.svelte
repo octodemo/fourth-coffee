@@ -14,9 +14,9 @@
 <div class="review-filter">
   <span class="filter-label">Filter by rating:</span>
   <div class="filter-buttons">
-    <button class:active={activeFilter === 0} onclick={() => applyFilter(0)}>All</button>
+    <button class:active={activeFilter === 0} aria-pressed={activeFilter === 0} onclick={() => applyFilter(0)}>All</button>
     {#each [5, 4, 3, 2, 1] as star}
-      <button class:active={activeFilter === star} onclick={() => applyFilter(star)}>
+      <button class:active={activeFilter === star} aria-pressed={activeFilter === star} onclick={() => applyFilter(star)}>
         {star}★
       </button>
     {/each}
