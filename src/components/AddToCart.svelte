@@ -1,16 +1,13 @@
 <script>
-  import { actions } from 'astro:actions';
-  
+  import { cart } from '../lib/cart.svelte';
+
   let { slug, productName, price } = $props();
   let quantity = $state(1);
   let added = $state(false);
   let total = $derived(price * quantity);
 
-  async function addToCart() {
-    const data = await actions.addToCart.orThrow({ 
-      slug, productName, quantity 
-    });
-    console.log(data.message);
+  function addToCart() {
+    cart.add(slug, productName, price, quantity);
     added = true;
     setTimeout(() => added = false, 2000);
   }

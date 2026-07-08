@@ -4,6 +4,7 @@ import { db, Product } from 'astro:db';
 import ReviewList from '../../components/ReviewList.astro';
 import ReviewForm from '../../components/ReviewForm.svelte';
 import ReviewFilter from '../../components/ReviewFilter.svelte';
+import AddToCart from '../../components/AddToCart.svelte';
 
 export async function getStaticPaths() {
   const products = await db
@@ -34,6 +35,7 @@ const { product } = Astro.props;
     <p class="price">${product.price.toFixed(2)} / 12oz bag</p>
     <p>{product.description}</p>
     <div class="notes"><strong>Tasting Notes:</strong> {product.notes}</div>
+    <AddToCart slug={product.slug} productName={product.name} price={product.price} client:load />
     <ReviewForm slug={product.slug} client:load />
     <ReviewFilter client:load />
     <ReviewList slug={product.slug} server:defer />
