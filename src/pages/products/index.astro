@@ -1,6 +1,15 @@
 ---
+export const prerender = false;
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { db, Product, Review, avg } from 'astro:db';
+import { db, Product, Review, avg, count } from 'astro:db';
+
+const PAGE_SIZE = 9;
+const page = Math.max(1, Number(Astro.url.searchParams.get('page')) || 1);
+
+const [{ total }] = await db.select({ total: count() }).from(Product);
+const totalPages = Math.ceil(total / PAGE_SIZE);
+const currentPage = Math.min(page, totalPages);
+const offset = (currentPage - 1) * PAGE_SIZE;
 
 const products = await db
   .select({
@@ -10,7 +19,9 @@ const products = await db
     roast: Product.roast,
   })
   .from(Product)
-  .orderBy(Product.name);
+  .orderBy(Product.name)
+  .limit(PAGE_SIZE)
+  .offset(offset);
 
 const avgRatings = await db
   .select({
@@ -46,4 +57,27 @@ const productsWithRatings = products.map(p => ({
       </article>
     ))}
   </div>
+  {totalPages > 1 && (
+    <nav class="pagination" aria-label="Products pagination">
+      {currentPage > 1 ? (
+        <a href={`/products?page=${currentPage - 1}`} class="pagination-btn">&larr; Previous</a>
+      ) : (
+        <span class="pagination-btn disabled">&larr; Previous</span>
+      )}
+      <div class="pagination-pages">
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+          p === currentPage ? (
+            <span class="pagination-num active">{p}</span>
+          ) : (
+            <a href={`/products?page=${p}`} class="pagination-num">{p}</a>
+          )
+        ))}
+      </div>
+      {currentPage < totalPages ? (
+        <a href={`/products?page=${currentPage + 1}`} class="pagination-btn">Next &rarr;</a>
+      ) : (
+        <span class="pagination-btn disabled">Next &rarr;</span>
+      )}
+    </nav>
+  )}
 </BaseLayout>
