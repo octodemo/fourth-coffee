@@ -38,11 +38,11 @@ const productsWithRatings = products.map(p => ({
         <span class="roast-badge" data-roast={p.roast.toLowerCase()}>{p.roast}</span>
         <h2>{p.name}</h2>
         <div class="card-rating">
-          <span class="stars">{'★'.repeat(Math.round(p.avgRating))}{'☆'.repeat(5 - Math.round(p.avgRating))}</span>
+          <span class="stars" role="img" aria-label={`${Math.round(p.avgRating)} out of 5 stars`}>{'★'.repeat(Math.round(p.avgRating))}{'☆'.repeat(5 - Math.round(p.avgRating))}</span>
           <span class="rating-value">{p.avgRating > 0 ? p.avgRating.toFixed(1) : 'No reviews'}</span>
         </div>
         <p class="price">${p.price.toFixed(2)}</p>
-        <a class="btn" href={`/products/${p.slug}`}>View Details</a>
+        <a class="btn" href={`/products/${p.slug}`} aria-label={`View details for ${p.name}`}>View Details</a>
       </article>
     ))}
   </div>

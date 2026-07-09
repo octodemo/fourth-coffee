@@ -14,8 +14,9 @@ const { title } = Astro.props;
     <title>{title} | Fourth Coffee</title>
   </head>
   <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <header>
-      <nav>
+      <nav aria-label="Main navigation">
         <a href="/" class="logo">☕ Fourth Coffee</a>
         <div class="nav-links">
           <a href="/">Home</a>
@@ -26,7 +27,7 @@ const { title } = Astro.props;
       </nav>
     </header>
 
-    <main>
+    <main id="main-content">
       <slot />  <!-- Child content renders here -->
     </main>
 
@@ -38,6 +39,23 @@ const { title } = Astro.props;
 
 <style>
   /* These styles are SCOPED to this component */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 100;
+    padding: 0.75rem 1.5rem;
+    background: #2c1810;
+    color: #f5f0e8;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 0 0 4px 0;
+  }
+
+  .skip-link:focus {
+    left: 0;
+  }
+
   header {
     background: #2c1810;
     padding: 1rem 2rem;
