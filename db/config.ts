@@ -23,4 +23,17 @@ const Review = defineTable({
   },
 });
 
-export default defineDb({ tables: { Product, Review } });
+const Subscription = defineTable({
+  columns: {
+    id: column.number({ primaryKey: true }),
+    customerName: column.text(),
+    customerEmail: column.text(),
+    productSlug: column.text(),
+    roastPreference: column.text(),
+    frequency: column.text(),
+    bagSize: column.text(),
+    createdAt: column.text(),
+  },
+});
+
+export default defineDb({ tables: { Product, Review, Subscription } });

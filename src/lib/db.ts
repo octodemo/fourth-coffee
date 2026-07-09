@@ -1,7 +1,7 @@
 import Database from 'better-sqlite3';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import type { Product } from './types';
+import type { Product, Subscription } from './types';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -20,6 +20,19 @@ db.exec(`
   )
 `);
 
+db.exec(`
+  CREATE TABLE IF NOT EXISTS subscriptions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    customerName TEXT NOT NULL,
+    customerEmail TEXT NOT NULL,
+    productSlug TEXT NOT NULL,
+    roastPreference TEXT NOT NULL,
+    frequency TEXT NOT NULL,
+    bagSize TEXT NOT NULL,
+    createdAt TEXT NOT NULL
+  )
+`);
+
 const count = db.prepare('SELECT COUNT(*) as count FROM products').get() as { count: number };
 if (count.count === 0) {
   const insert = db.prepare('INSERT INTO products (name, slug, description, price, roast, origin, notes) VALUES (?, ?, ?, ?, ?, ?, ?)');
@@ -29,7 +42,24 @@ if (count.count === 0) {
   insert.run('Sunrise Blend', 'sunrise-blend', 'Our signature morning blend.', 15.99, 'Medium', 'Blend', 'Caramel, orange, chocolate');
 }
 
-export type { Product };
+export type { Product, Subscription };
 export function getAllProducts(): Product[] { return db.prepare('SELECT * FROM products ORDER BY name').all() as Product[]; }
 export function getProductBySlug(slug: string): Product | undefined { return db.prepare('SELECT * FROM products WHERE slug = ?').get(slug) as Product | undefined; }
+
+export function createSubscription(sub: Omit<Subscription, 'id'>): Subscription {
+  const stmt = db.prepare(
+    'INSERT INTO subscriptions (customerName, customerEmail, productSlug, roastPreference, frequency, bagSize, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?)'
+  );
+  const result = stmt.run(sub.customerName, sub.customerEmail, sub.productSlug, sub.roastPreference, sub.frequency, sub.bagSize, sub.createdAt);
+  return { id: result.lastInsertRowid as number, ...sub };
+}
+
+export function getSubscriptionById(id: number): Subscription | undefined {
+  return db.prepare('SELECT * FROM subscriptions WHERE id = ?').get(id) as Subscription | undefined;
+}
+
+export function getSubscriptionsByEmail(email: string): Subscription[] {
+  return db.prepare('SELECT * FROM subscriptions WHERE customerEmail = ? ORDER BY createdAt DESC').all(email) as Subscription[];
+}
+
 export { db };
