@@ -1,9 +1,58 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { db, Product, Review, avg } from 'astro:db';
+
+// Get average ratings for all products
+const avgRatings = await db
+  .select({
+    productSlug: Review.productSlug,
+    avgRating: avg(Review.rating),
+  })
+  .from(Review)
+  .groupBy(Review.productSlug);
+
+const ratingMap = new Map(avgRatings.map(r => [r.productSlug, Number(r.avgRating) || 0]));
+
+// Get all products
+const allProducts = await db
+  .select({
+    name: Product.name,
+    slug: Product.slug,
+    price: Product.price,
+    roast: Product.roast,
+  })
+  .from(Product);
+
+// Add ratings and sort by rating (descending), then take top 3
+const productsWithRatings = allProducts
+  .map(p => ({
+    ...p,
+    avgRating: ratingMap.get(p.slug) ?? 0,
+  }))
+  .sort((a, b) => b.avgRating - a.avgRating)
+  .slice(0, 3);
 ---
 
 <BaseLayout title="Home">
   <h1>Welcome to Fourth Coffee</h1>
   <p>Your one-stop shop for the finest coffee beans and brewing equipment.</p>
   <p>Explore our blog for brewing tips, coffee recipes, and industry news.</p>
+
+  <section style="margin-top: 3rem;">
+    <h2 style="color: #2c1810; margin-bottom: 1.5rem;">Featured Coffees</h2>
+    <div class="product-grid">
+      {productsWithRatings.map(p => (
+        <article class="product-card">
+          <span class="roast-badge" data-roast={p.roast.toLowerCase()}>{p.roast}</span>
+          <h2>{p.name}</h2>
+          <div class="card-rating">
+            <span class="stars">{'★'.repeat(Math.round(p.avgRating))}{'☆'.repeat(5 - Math.round(p.avgRating))}</span>
+            <span class="rating-value">{p.avgRating > 0 ? p.avgRating.toFixed(1) : 'No reviews'}</span>
+          </div>
+          <p class="price">${p.price.toFixed(2)}</p>
+          <a class="btn" href={`/products/${p.slug}`}>View Details</a>
+        </article>
+      ))}
+    </div>
+  </section>
 </BaseLayout>
