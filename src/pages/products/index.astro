@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProductSearch from '../../components/ProductSearch.svelte';
 import { db, Product, Review, avg } from 'astro:db';
 
 const products = await db
@@ -8,6 +9,7 @@ const products = await db
     slug: Product.slug,
     price: Product.price,
     roast: Product.roast,
+    origin: Product.origin,
   })
   .from(Product)
   .orderBy(Product.name);
@@ -32,9 +34,17 @@ const productsWithRatings = products.map(p => ({
   <div class="products-header">
     <h1>Our Coffees</h1>
   </div>
-  <div class="product-grid">
+
+  <ProductSearch client:load />
+
+  <div class="product-grid" id="product-grid">
     {productsWithRatings.map(p => (
-      <article class="product-card">
+      <article
+        class="product-card"
+        data-name={p.name.toLowerCase()}
+        data-origin={p.origin.toLowerCase()}
+        data-roast={p.roast.toLowerCase()}
+      >
         <span class="roast-badge" data-roast={p.roast.toLowerCase()}>{p.roast}</span>
         <h2>{p.name}</h2>
         <div class="card-rating">
